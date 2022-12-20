@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Jala.Custom.Middleware.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]/[action]")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
@@ -12,14 +12,16 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly IHttpContextAccessor _contextAccessor;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IHttpContextAccessor contextAccessor)
     {
         _logger = logger;
+        _contextAccessor = contextAccessor;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    [HttpGet]
+    public IEnumerable<WeatherForecast> GetWeatherForecast()
     {
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -28,5 +30,12 @@ public class WeatherForecastController : ControllerBase
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+    }
+
+    [HttpGet]
+    public IActionResult GetId(int id)
+    {
+        int idfromquery = int.Parse(_contextAccessor.HttpContext.Items["Id"].ToString());
+        return Ok(idfromquery);
     }
 }

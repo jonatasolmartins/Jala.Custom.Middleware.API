@@ -17,9 +17,9 @@ public class ParamsMiddleware
 
     private void ParamHandler(HttpContext context)
     {
-        context.Items["AppName"] = "Weather";
         if(context.Request.Path.HasValue == true && context.Request.Path.Value.Contains("GetWeatherForecast"))
             Console.WriteLine("Yes");
+        
     }
     
     
